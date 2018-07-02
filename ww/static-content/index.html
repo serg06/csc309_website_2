@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:display="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta HTTP-EQUIV="EXPIRES" CONTENT="-1">
+    <title>Computing Science 309 Warehouse Wars</title>
+    <script language="javascript" src="jquery-3.3.1.min.js"></script>
+    <script language="javascript" src="util.js"></script>
+    <script language="javascript" src="nav.js"></script>
+    <script language="javascript" src="login.js"></script>
+    <script language="javascript" src="create_user.js"></script>
+    <script language="javascript" src="user_profile.js"></script>
+    <script language="javascript" src="high_scores.js"></script>
+    <script language="javascript" src="ww.js"></script>
+
+    <script>
+        let stage = null;
+
+        // setup stage
+        function setupGame() {
+            stage = new Stage(20, 20, "stage");
+            stage.initialize();
+        }
+
+        // start it
+        function startGame() {
+            stage.run();
+        }
+
+        // pause it
+        function pauseGame() {
+            stage.stop();
+        }
+
+        // capture keyboard keys for controls
+        function captureKeys() {
+            let key_to_direction = {
+                81: 'nw',
+                87: 'n',
+                69: 'ne',
+                65: 'w',
+                68: 'e',
+                90: 'sw',
+                88: 's',
+                67: 'se'
+            };
+
+            document.addEventListener('keydown', function (event) {
+                let direction = key_to_direction[event.keyCode];
+                if (direction !== undefined) {
+                    stage.player.move(direction);
+                }
+            });
+        }
+
+        $(function () {
+            populate_high_scores();
+            authenticate(); // automatically log in if we already have token in our cookies
+            captureKeys();
+        });
+    </script>
+    <link rel="stylesheet" type="text/css" href="index.css"/>
+</head>
+<body bgcolor="ffffff">
+<header id="errorField" style="display: none;"></header>
+<nav style="display: none;">
+    <ul>
+        <li>
+            <button name="game" class="selected">Game</button>
+        <li>
+            <button name="user_profile">User Profile</button>
+        <li>
+            <button name="high_scores">High Scores</button>
+        <li>
+            <button name="logout">Logout</button>
+    </ul>
+</nav>
+<center>
+    <h1>Warehouse Wars</h1>
+    <div id="login" class="section">
+        <form id="loginForm">
+            <table>
+                <tr>
+                    <th><label>User</label></th>
+                    <td><input type="text" name="id" pattern="[a-zA-Z0-9]+"
+                               title="only alphanumeric characters are allowed" required/></td>
+                </tr>
+                <tr>
+                    <th><label>Password</label></th>
+                    <td><input type="password" name="password" required/></td>
+                </tr>
+                <tr>
+                    <th>
+                        <button onclick='$("#login").hide(); $("#high_scores").hide(); $("#create_user").show(); return false;'>
+                            Register...
+                        </button>
+                    </th>
+                    <td>
+                        <input type="submit" value="Login"/>
+                    </td>
+                </tr>
+                <tr id="loginErrors" style="display: none;">
+                    <th>Errors</th>
+                    <td></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <div id="high_scores" class="section">
+        <h3>High scores</h3>
+        <div id="high_scores_section">
+            <img src="icons/loading.gif"/>
+        </div>
+    </div>
+    <div id="create_user" class="section" style="display: none; table-layout:fixed;">
+        <form id="createUserForm">
+            <table>
+                <tr>
+                    <th><label>User</label></th>
+                    <td><input type="text" name="id" pattern="[a-zA-Z0-9]+"
+                               title="only alphanumeric characters are allowed" required/></td>
+                </tr>
+                <tr>
+                    <th><label>Password</label></th>
+                    <td><input type="password" name="password" required/></td>
+                </tr>
+                <tr>
+                    <th><label>Name</label></th>
+                    <td><input type="text" name="name" pattern="[a-zA-Z0-9]+"
+                               title="only alphanumeric characters are allowed" required/></td>
+                </tr>
+                <tr>
+                    <th>
+                        <button onclick='$("#create_user").hide(); $("#login").show(); $("#high_scores").show(); return false;'>
+                            Login...
+                        </button>
+                    </th>
+                    <td>
+                        <input type="submit" value="Create user"/>
+                    </td>
+                </tr>
+                <tr id="createUserErrors" style="display: none;">
+                    <th>Errors</th>
+                    <td></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <table id="game" class="section" style="display: none; table-layout:fixed;">
+        <tr>
+            <th>Time elapsed:
+                <div id="time_elapsed">0</div>
+            </th>
+        </tr>
+        <tr>
+            <td id="stage" style="width: 1%; height: 1%"></td>
+            <td>
+                <center>
+                    <h2>Instructions</h2>
+                    <table class="instructions">
+                        <tr>
+                            <td>Surround the monsters with boxes to kill them. Kill all monsters to win. Quicker win =
+                                higher score.
+                            </td>
+                        </tr>
+                    </table>
+                    <h2>Legend</h2>
+                    <table class="legend">
+                        <tr>
+                            <td><img src="icons/blank.gif" id="blankImage"/></td>
+                            <td><img src="icons/emblem-package-2-24.png" id="boxImage"/></td>
+                            <td><img src="icons/face-cool-24.png" id="playerImage"/></td>
+                            <td><img src="icons/face-devil-grin-24.png" id="monsterImage"/></td>
+                            <td><img src="icons/devil-blue.png" id="blueMonsterImage"/></td>
+                            <td><img src="icons/wall.jpeg" id="wallImage"/></td>
+                        </tr>
+                        <tr>
+                            <td> Empty <br/> Square</td>
+                            <td> Box</td>
+                            <td> Player</td>
+                            <td> Monster</td>
+                            <td> Smart Monster</td>
+                            <td> Wall</td>
+                        </tr>
+                    </table>
+                    <h2>Controls</h2>
+                    (Click or use qweadzxc keyboard keys.)<br/><br/>
+                    <table class="controls">
+                        <tr>
+                            <td><img src="icons/north_west.svg" onclick="stage.player.move('nw');"/></td>
+                            <td><img src="icons/north.svg" onclick="stage.player.move('n');"/></td>
+                            <td><img src="icons/north_east.svg" onclick="stage.player.move('ne');"/></td>
+                        </tr>
+                        <tr>
+                            <td><img src="icons/west.svg" onclick="stage.player.move('w');"/></td>
+                            <td>&nbsp;</td>
+                            <td><img src="icons/east.svg" onclick="stage.player.move('e');"/></td>
+                        </tr>
+                        <tr>
+                            <td><img src="icons/south_west.svg" onclick="stage.player.move('sw');"/></td>
+                            <td><img src="icons/south.svg" onclick="stage.player.move('s');"/></td>
+                            <td><img src="icons/south_east.svg" onclick="stage.player.move('se');"/></td>
+                        </tr>
+                    </table>
+                    <button id="resetButton" onclick="setupGame(); startGame(); this.style='display: none;';"
+                            style="display: none;"></button>
+                </center>
+            </td>
+        </tr>
+    </table>
+    <div id="user_profile" class="section" style="display: none;">
+        <form id="user_profile_form">
+            <table>
+                <tr>
+                    <th><label>User</label></th>
+                    <td><input type="text" name="id" disabled/></td>
+                </tr>
+                <tr>
+                    <th><label>Score</label></th>
+                    <td><input type="text" name="score" disabled/></td>
+                </tr>
+                <tr>
+                    <th><label>Password</label></th>
+                    <td><input type="password" name="password" required/></td>
+                </tr>
+                <tr>
+                    <th><label>Name</label></th>
+                    <td><input type="text" name="name" pattern="[a-zA-Z0-9]+"
+                               title="only alphanumeric characters are allowed" required/></td>
+                </tr>
+                <tr>
+                    <td><img src="icons/loading.gif" name="loading" style="display: none;"></td>
+                    <td>
+                        <input type="submit" value="Update"/>
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <button onclick="delete_user()" style="color: red;">DELETE USER</button>
+    </div>
+</center>
+</body>
+</html>
+

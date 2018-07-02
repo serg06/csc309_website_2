@@ -1,0 +1,19 @@
+# IDE
+.idea/
+
+# project
+database.db
+
+# node
+node_modules/
+
+# misc. asgt-related files
+todo.txt
+adjustments.txt
+checklist.txt
+ww/features.txt
+ww/members.txt
+ww/notes.txt
+READ_THIS\!.txt
+*.zip
+*.log
