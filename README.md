@@ -1,4 +1,4 @@
-# Assignment 1 for CSC309H5 - Programming on the Web.
+# Assignment 2 for CSC309H5 - Programming on the Web.
 
 Try it out by downloading and following [setup](#setup-instructions) instructions below.
 
