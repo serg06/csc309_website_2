@@ -205,7 +205,6 @@ app.post('/api/update_user/', authenticate, function (req, res) {
 
 // delete user
 // requires authentication
-// TODO: Consider DELETE instead of POST
 app.delete('/api/delete_user/', authenticate, function (req, res) {
     let user = req.decoded.user.id;
 
