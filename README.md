@@ -8,7 +8,7 @@ This is a NodeJS backend + HTML/JS/CSS frontend. Everything is on a single page,
 
 The website is called "Warehouse Wars".
 
-Technologies
+### Technologies
   - HTML5
   - CSS
   - Javascript
@@ -19,13 +19,13 @@ Technologies
   - sqlite3
   - Json web tokens
 
-Pages
+### Pages
   - **Game**: The Warehouse Wars game. Game runs locally, score is sent to server on win. Naturally vulnerable to score manipulation.
   - **User Profile**: Users can add some info about themselves.
   - **Results**: User high scores.
   - **Logout**: Now that's what I call a self-documenting feature.
 
-Other features:
+### Other features:
   - Functionality:
     - Code is clear and concise.
     - High scores appear both on main page and on high scores page.
