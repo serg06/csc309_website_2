@@ -33,10 +33,10 @@ The website is called "Warehouse Wars".
     - Game starts fresh once you log in.
     - User profile and high scores page both dynamically refresh on every visit.
     - Nav bar highlights current page.
+    - Entire site on a single page, using hide/show -- no http requrests required.
   - Game:
     - Effective use of object-oriented JS for game. (Inheritance, method overriding.)
     - Game has a smart monster (chases player.)
-    - Entire site on a single page, using hide/show -- no http requrests required.
     - Player can move via icons OR keyboard (q/w/e/a/d/z/x/c.)
   - Rest API:
     - Frontend and backend validation.
